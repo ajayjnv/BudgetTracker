@@ -45,7 +45,7 @@ creating budgets (weekly/monthly/yearly), tracking spendings (called "buddies"),
    # development
    node index.js
    # or, if package.json has a start script:
-   npm start
+   npm run dev
    ```
 
 5. Open http://localhost:3000
