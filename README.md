@@ -55,7 +55,7 @@ creating budgets (weekly/monthly/yearly), tracking spendings (called "buddies"),
 - `index.js` — main Express app and all route handlers
 - `views/` — EJS templates (pages and partials)
 - `public/` — static assets (CSS and images)
-- `package.json` — (not shown here) dependencies & scripts
+- `package.json` — dependencies & scripts
 
 ## API / Routes (overview)
 
