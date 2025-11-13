@@ -32,10 +32,6 @@ const authToken=(req,res,next)=>{
 
 }
 dotenv.config()
-server.use((req, res, next) => {
-    connectWithRetry();
-    next();
-})
 
 server.set("view engine", "ejs")
 server.set("views", "./views")
@@ -536,4 +532,4 @@ server.post("/upload", async (req, res) => {
     }
 })
 
-module.exports = server
+module.exports = server;
