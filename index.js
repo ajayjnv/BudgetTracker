@@ -32,6 +32,11 @@ const authToken=(req,res,next)=>{
 
 }
 dotenv.config()
+server.use((req, res, next) => {
+    connectWithRetry();
+    next();
+})
+
 server.set("view engine", "ejs")
 server.set("views", "./views")
 server.use(cookieParser())
@@ -39,12 +44,21 @@ server.use(express.static(static_pages))
 server.use(express.json())
 server.use(express.urlencoded({ extended: true }))
 
+let isConnected = false;
 
-mongoose.connect(process.env.MONGO_URI).then(() => {
-    console.log("MongoDB connection Established Successfully");
-}).catch(() => {
-    console.log("MongoDB Connection Failed");
-})
+async function connectWithRetry() {
+    try {
+        await mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true });
+        isConnected = true;
+        console.log("MongoDB is connected");
+    }
+    catch (err) {
+        console.log("MongoDB connection unsuccessful, retry after 5 seconds.", err);
+    }
+}
+
+
+
 
 const userSchema = new mongoose.Schema({
     full_name: String,
@@ -522,6 +536,4 @@ server.post("/upload", async (req, res) => {
     }
 })
 
-server.listen(PORT, () => {
-    console.log(`http://localhost:${PORT}`);
-})
+module.exports = server
