@@ -34,7 +34,6 @@ const authToken=(req,res,next)=>{
 
 }
 dotenv.config()
-connectWithRetry()
 
 
 server.set("view engine", "ejs")
@@ -44,15 +43,6 @@ server.use(express.static(static_pages))
 server.use(express.json())
 server.use(express.urlencoded({ extended: true }))
 
-async function connectWithRetry() {
-    try {
-        await mongoose.connect(process.env.MONGO_URI);
-        console.log("MongoDB is connected");
-    }
-    catch (err) {
-        console.log("MongoDB connection unsuccessful, retry after 5 seconds.", err);
-    }
-}
 
 
 
@@ -533,4 +523,11 @@ server.post("/upload", async (req, res) => {
     }
 })
 
-module.exports = server;
+mongoose.connect(process.env.MONGO_URI).then(() => {
+    console.log("MongoDB is connected");                                                        
+    server.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+    });
+}   ).catch((err) => {
+    console.log("MongoDB connection unsuccessful.", err);
+});         
