@@ -34,12 +34,7 @@ const authToken=(req,res,next)=>{
 
 }
 dotenv.config()
-server.use((req,res,next)=>{
-    if (!isConnected) {
-        connectWithRetry()
-    }
-    next()
-})  
+connectWithRetry()
 
 
 server.set("view engine", "ejs")
