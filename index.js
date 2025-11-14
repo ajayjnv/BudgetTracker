@@ -7,6 +7,8 @@ const path = require("path")
 const jwt=require("jsonwebtoken")
 const cookieParser = require("cookie-parser")
 
+let isConnected = false;
+
 
 const PORT = 3000
 const server = express()
@@ -32,6 +34,13 @@ const authToken=(req,res,next)=>{
 
 }
 dotenv.config()
+server.use((req,res,next)=>{
+    if (!isConnected) {
+        connectWithRetry()
+    }
+    next()
+})  
+
 
 server.set("view engine", "ejs")
 server.set("views", "./views")
@@ -40,12 +49,9 @@ server.use(express.static(static_pages))
 server.use(express.json())
 server.use(express.urlencoded({ extended: true }))
 
-let isConnected = false;
-
 async function connectWithRetry() {
     try {
         await mongoose.connect(process.env.MONGO_URI);
-        isConnected = true;
         console.log("MongoDB is connected");
     }
     catch (err) {
@@ -532,4 +538,6 @@ server.post("/upload", async (req, res) => {
     }
 })
 
-module.exports = server;
+server.listen(process.env.PORT || PORT, () => {
+    console.log(`http://localhost:${PORT}`)
+})
