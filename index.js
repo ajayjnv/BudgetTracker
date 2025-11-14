@@ -538,6 +538,4 @@ server.post("/upload", async (req, res) => {
     }
 })
 
-server.listen(process.env.PORT || PORT, () => {
-    console.log(`http://localhost:${PORT}`)
-})
+module.exports = server;
